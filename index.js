@@ -1,16 +1,18 @@
+#!/usr/bin/env node
 let axios = require('axios');
-// Retrieving email addresse
-let input_email = 'elias227@gmail.com';
+const chalk = require('chalk');
 
-// Validating script
+// Retrieving email address from terminal user
+if (process.argv[2] == null) {console.log('Please enter a valid email address after testouille to check for breaches.')}
+else {
+let input_email = process.argv[2];
+
+// Validating email format
 let validator = require("email-validator");
-
 let validated = validator.validate(input_email);
 
-
-//  Validating response to user
+//  Format response to user
 let validated_response = '';
-
 if (validated) {
     validated_response = 'This is a valid email address format. Well done ! ;)';
 } else {
@@ -19,31 +21,28 @@ if (validated) {
 console.log(validated_response);
 
 // Axios request to haveibeenpwned.com
+
+    // Config
 let url = `https://haveibeenpwned.com/api/v2/breachedaccount/${input_email}`;
-let headers = {'api-version': '2', 'user-agent': 'Hamilton'};
+let headers = {'api-version': '2', 'user-agent': 'Oufti'};
 
-
+    // Request and response
 if (validated) {
     console.log(`Requesting to: ${url}`);
-    axios.get(`${url}`,
-      {headers: headers})
+    axios.get(`${url}`, {headers: headers})
     .then(function (response) {
-          if (response.status == 200) {
               console.log(`Connecting to server: okay (status code ${response.status})`);
-              if (response.data[0] == null) {
-                  console.log('Great news! It looks like your email address has not been breached.');
-              } else {
-                  console.log(`Your email address has been breached from databases of: ${response.data[0].Name}`);
-            }
-          }
-    })
+              const breaches=response.data.map(({Name}) => Name);
+              console.log(chalk.bgRed(`Your email address has been breached from databases of: ${breaches.join("\n")}`))
+      })
     .catch(function (error) {
-        if (error = 404) {
-            console.log('It seems the email address you submitted does not exist. You make no sense.');
+        if (error.response) {
+            console.log(chalk.bgGreen('Great news! It looks like your email address has not been breached.'));
         } else if (error = 429) {
-            console.log('You are making too many requests. Wait for a bit and try again.');
+            console.log('You are either making too many requests or your are disconnected. Wait for a bit, check your connection and try again.');
         } else {
             console.log('An unknown error has occured, and this is highly embarrassing.');
         }
     })
+}
 }

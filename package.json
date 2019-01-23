@@ -1,6 +1,6 @@
 {
   "name": "@kaidan/breached",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/Elias2702/nodejs-becode-cli.git"
   },
-  "keywords": ["email address", "breach", "safety", "leaks"],
+  "keywords": [
+    "email address",
+    "breach",
+    "safety",
+    "leaks"
+  ],
   "author": "kaidan",
   "license": "ISC",
   "bugs": {
